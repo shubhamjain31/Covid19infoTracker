@@ -4,5 +4,8 @@ This project is simply based on coronavirus tracker.
 
 # Screenshots
 ![Home Page](https://github.com/shubhamjain31/Covid19infoTracker/blob/master/Screenshots/image5.jpg)  
-![WorldCase Page](https://github.com/shubhamjain31/Covid19infoTracker/blob/master/Screenshots/image1.jpg)
+![WorldCase Page](https://github.com/shubhamjain31/Covid19infoTracker/blob/master/Screenshots/image1.jpg)  
 
+# Sources  
+https://www.mohfw.gov.in/  
+https://api.covid19india.org/
