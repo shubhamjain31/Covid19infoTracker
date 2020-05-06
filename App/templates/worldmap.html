@@ -1,0 +1,86 @@
+{% extends 'basic.html' %}
+{% load static %}
+{% block title %} CoronaVirus Tracker {% endblock %}
+{% block head %}
+<head>    
+    </script>
+    <style>
+#chartdiv {
+  max-width: 100%;
+  height: 600px;
+  background-color:#fbebdb;
+}
+.tot{
+    text-align: left;width:200px;align-content: right;box-shadow:10px 10px 20px #cbced1,
+    -10px -10px 20px #cbced1;border-bottom:5px solid #002C56;color:#002C56;padding:2% 2% 2% 2%;border-radius:8px;
+    height:180px;margin-top:5%;
+}
+.death{
+    text-align: left;width:200px;align-content: right;box-shadow:10px 10px 20px #cbced1,
+    -10px -10px 20px #cbced1;border-bottom:5px solid #002C56;color:#002C56;padding:2% 2% 2% 2%;border-radius:8px;
+    height:180px;margin-top:5%;
+    
+}
+.recover{
+    text-align: left;width:200px;align-content: right;box-shadow:10px 10px 20px #cbced1,
+    -10px -10px 20px #cbced1;border-bottom:5px solid #002C56;color:#002C56;padding:2% 2% 2% 2%;border-radius:8px;
+    height:180px;margin-top:5%;
+}
+
+.tot:hover{
+                background-color: rgba(62, 149, 205, 0.2);
+            }
+.death:hover{
+                background-color: rgba(255, 0, 0, 0.2);
+            }
+.recover:hover{
+    background-color: rgba(30, 130, 76, 0.2);
+}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    <script src="https://www.amcharts.com/lib/4/core.js"></script>
+<script src="https://www.amcharts.com/lib/4/maps.js"></script>
+<script src="https://www.amcharts.com/lib/4/geodata/continentsLow.js"></script>
+<script src="https://www.amcharts.com/lib/4/geodata/worldLow.js"></script>
+<script src="https://www.amcharts.com/lib/4/themes/dataviz.js"></script>
+<script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+<script src="{% static 'js/globe.js' %}"></script>
+</head>
+{% endblock %}
+{% block body %} 
+<body>
+<div class="container mt-2">  
+    <div class="row">
+        <div class="col-8" id="body">
+            <h3 class="text-dark mb-3 ml-1 font-weight-bold">Outbreak Globe</h3>
+            <div id="chartdiv"></div>
+        </div>
+        <div class="col-4 pl-5 mt-3">
+            <h3 class="text-center text-dark mb-3 font-weight-bold">World Statistics</h3>
+            <div style="border-bottom:8px solid rgba(62, 149, 205, 1);" class="tot pl-5 ml-5">
+                <p style="color:grey;font-weight:bolder;">Total Cases</p>
+                <h4 id="InfectedCaseCol" style="font-weight:bolder;">{{total}}</h4>
+                
+                <p style="color:red;" class="pl-4 pt-3">{{newCases}}</p>
+            </div>
+            <div style="border-bottom:8px solid rgba(255, 0, 0, 0.8);" class="death pl-5  ml-5">
+                <p style="color:grey;font-weight:bolder;">Total Deaths</p>
+                <h4 style="font-weight:bolder;" id="DeathCaseCol">{{dead}}</h4>
+                
+                <p style="color:red;" class="pl-4 pt-3">{{newDeaths}}</p>
+            </div>
+            <div style="border-bottom:8px solid rgba(30, 130, 76, 1);" class="recover pl-5  ml-5">
+                <p style="color:grey;font-weight: bolder;">Total Recovered</p>
+                <h4 id="RecoveredCaseCol" style="font-weight:bolder;">{{recover}}</h4>
+                
+                <p style="color:grey;">Total number of recovered cases of Covid-19.</p>
+            </div>
+        </div>
+    </div>
+    <div class="container my-3 mt-5 w-75">
+                <h3 class="text-center text-dark font-weight-bold">Outbreak Spread Trend</h3>
+                <canvas id="bar-chart" width="800" height="450"></canvas>
+            </div>
+</div>
+</body>
+{% endblock %}

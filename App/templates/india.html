@@ -1,0 +1,176 @@
+{% extends 'basic.html' %}
+{% load static %}
+{% block title %} CoronaVirus Tracker {% endblock %}
+{% block head %}
+<head>    
+    <script src="{% static 'js/india.js' %}">        
+    </script>
+   <link href='https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.css' rel='stylesheet' />
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    <style>#body {width: 100vw;height: 100vh;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <style>
+        .map {
+            position: relative;
+            width: 100.0%;
+            height: 100.0%;
+            left: 0.0%;
+            top: 0.0%;
+        }
+
+    </style>
+        <style>
+        .tot{
+            text-align: left;width:200px;align-content: right;box-shadow:10px 10px 20px #cbced1,
+            -10px -10px 20px #cbced1;border-bottom:5px solid #002C56;color:#002C56;padding:2% 2% 2% 2%;border-radius:8px;
+            height:100px;margin-top:5%;
+        }
+        .act{
+            text-align: left;width:200px;align-content: right;box-shadow:10px 10px 20px #cbced1,
+            -10px -10px 20px #cbced1;border-bottom:5px solid #002C56;color:#002C56;padding:2% 2% 2% 2%;border-radius:8px;
+            height:100px;margin-top:5%;
+        }
+        .death{
+            text-align: left;width:200px;align-content: right;box-shadow:10px 10px 20px #cbced1,
+            -10px -10px 20px #cbced1;border-bottom:5px solid #002C56;color:#002C56;padding:2% 2% 2% 2%;border-radius:8px;
+            height:100px;margin-top:5%;
+            
+        }
+        .recover{
+            text-align: left;width:200px;align-content: right;box-shadow:10px 10px 20px #cbced1,
+            -10px -10px 20px #cbced1;border-bottom:5px solid #002C56;color:#002C56;padding:2% 2% 2% 2%;border-radius:8px;
+            height:100px;margin-top:5%;
+        }
+
+        .tot:hover{
+                        background-color: rgba(62, 149, 205, 0.2);
+                    }
+        .act:hover{
+                        background-color: rgba(96, 96, 96, 0.2);
+                    }
+        .death:hover{
+                        background-color: rgba(255, 0, 0, 0.2);
+                    }
+        .recover:hover{
+                        background-color: rgba(30, 130, 76, 0.2);
+        }
+    </style>
+    <style>
+        .my-custom-scrollbar {
+        position: relative;
+        height: 400px;
+        overflow: auto;
+        }
+        .table-wrapper-scroll-y {
+        display: block;
+        }
+    </style>
+</head>
+{% endblock %}
+{% block body %} 
+<body>  
+<div class="container-fluid">
+    <div class="container mt-2">  
+        <div class="row">
+            <div class="col-8" id="body">
+                <div id='map' class="map"></div>
+            </div>
+             <div class="col-4 pl-5 mt-3">
+                <h3 class="text-center text-dark mb-3 font-weight-bold">Indian Statistics</h3>
+                <div style="border-bottom:8px solid rgba(62, 149, 205, 1);" class="tot pl-5 ml-5">
+                    <p style="color:grey;font-weight:bolder;">Confirmed</p>
+                    <h4 id="InfectedCaseCol" style="font-weight:bolder;">{{totalConfirmed}}</h4>
+                    
+                    <p style="color:red;" class="pl-4 pt-3"></p>
+                </div>
+                <div style="border-bottom:8px solid rgba(96, 96, 96, 0.8);" class="act pl-5 ml-5">
+                    <p style="color:grey;font-weight:bolder;">Active</p>
+                    <h4 id="ActiveCaseCol" style="font-weight:bolder;">{{totalActive}}</h4>
+                    
+                    <p style="color:red;" class="pl-4 pt-3"></p>
+                </div>
+                <div style="border-bottom:8px solid rgba(255, 0, 0, 0.8);" class="death pl-5  ml-5">
+                    <p style="color:grey;font-weight:bolder;">Deaths</p>
+                    <h4 style="font-weight:bolder;" id="DeathCaseCol">{{totalDead}}</h4>
+                    
+                    <p style="color:red;" class="pl-4 pt-3"></p>
+                </div>
+                <div style="border-bottom:8px solid rgba(30, 130, 76, 1);" class="recover pl-5  ml-5">
+                    <p style="color:grey;font-weight: bolder;">Recovered</p>
+                    <h4 id="RecoveredCaseCol" style="font-weight:bolder;">{{totalRecovered}}</h4>
+                    
+                    <p style="color:grey;"></p>
+                </div>     
+            </div>
+        </div>
+    </div>
+    <div class="container my-4">
+        <h3 class="text-center text-warning">Statewise Statistics</h3>        
+         <div class="container d-flex justify-content-center" style="width: 550px;">
+          <div class="table-wrapper-scroll-y my-custom-scrollbar">
+            <table class="table-responsive table-bordered table-striped text-center border-primary">
+                <thead class="thead-light">
+                <tr>
+                    <th scope="col" class="text-dark">State</th>
+                    <th scope="col" class="text-danger">Confirmed</th>
+                    <th scope="col" class="text-primary">Active</th>
+                    <th scope="col" class="text-success">Recovered</th>
+                    <th scope="col" class="text-secondary">Deceased</th>
+                </tr>
+                </thead>
+                <tbody>
+                
+                   {% for i in stateCases %}
+                      <tr>
+                        {% for j in i|slice:":1" %}
+                        <td><a href="/Indiadistrict/{{j}}">{{j}}</a></td>
+                        {% endfor %}
+                        {% for j in i|slice:"1:" %}
+                        <td>{{j}}</td>
+                        {% endfor %}
+                      </tr>
+                      {% endfor %}
+                    
+                </tbody>
+            </table>
+          </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="container my-3 mt-5 w-75">
+            <h3 class="text-center text-dark">Confirmed Statistic</h3>
+            <canvas id="line-chart" width="800" height="450"></canvas>
+        </div><br><hr><br>
+        <div class="container my-3 mt-5 w-75">
+            <h3 class="text-center text-dark">Active Statistic</h3>
+            <canvas id="line-chart3" width="800" height="450"></canvas>
+        </div><br><hr><br>
+        <div class="container my-3 mt-5 w-75">
+            <h3 class="text-center text-dark"> Recovered Statistic</h3>
+            <canvas id="line-chart2" width="800" height="450"></canvas>
+        </div><br><hr><br>
+        <div class="container my-3 mt-5 w-75">
+            <h3 class="text-center text-dark"> Death Statistic</h3>
+            <canvas id="line-chart4" width="800vw" height="450vh"></canvas>
+        </div>
+    </div>
+</div>  
+</body>
+{% endblock %}
+{% block js %}
+<script src='https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.js'></script> 
+<script>
+  mapboxgl.accessToken = 'pk.eyJ1Ijoic2h1YmhhbTMxIiwiYSI6ImNrOGxhMTcxcDAxZTQzbG8ydmpicDAydHkifQ.OT_ndEmCUlXbogCjx2SC4w';
+  var map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/shubham31/ck9k2d82r11wj1ius0nv6uklt',
+    zoom: 4,
+    center: [80,23],
+    zoomControl: false,
+    preferCanvas: false,
+    touchZoom: false,
+    scrollWheelZoom: false,
+    doubleClickZoom: false,
+  });
+</script>
+{% endblock %}

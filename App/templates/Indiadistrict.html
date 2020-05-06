@@ -1,0 +1,40 @@
+{% extends 'basic.html' %}
+{% load static %}
+{% block title %} CoronaVirus Tracker {% endblock %}
+{% block head %}{% endblock %}
+{% block body %} 
+<body>  
+    <div class="container mt-2">
+        <div>
+            <h2 class="d-flex justify-content-center">District-Wise Cases of {{district}}</h2>
+        </div> 
+        <div class="container d-flex justify-content-center">
+            <table class="table table-bordered table-striped text-center table-info w-75">
+                <thead class="thead-light">
+                <tr>
+                    <th scope="col" class="text-dark text-center">District</th>
+                    <th scope="col" class="text-danger text-center">Confirmed</th>
+                    <th scope="col" class="text-primary text-center">Active</th>
+                    <th scope="col" class="text-success text-center">Recovered</th>
+                    <th scope="col" class="text-secondary text-center">Deaths</th>
+                </tr>
+                </thead>
+                <tbody>
+                
+                    {% for i in districtData %}
+                  <tr>
+                    {% for j in i %}
+                    <td >{{j}}</td>
+                    {% endfor %}
+                  </tr>
+                  {% endfor %}
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>    
+ 
+</body>
+
+{% endblock %}
+{% block js %}{% endblock %}
