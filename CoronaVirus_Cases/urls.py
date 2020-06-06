@@ -22,7 +22,6 @@ urlpatterns = [
     path('',views.index,name='index'),
     path('worlddata/',views.worlddata,name='worlddata'),
     path('map/<str:m>',views.map,name='map'),
-    path('graphOne/',views.graphOne,name='graphOne'),
     path('allgraphs/',views.allgraphs,name='allgraphs'),
     path('globe_data/',views.globe_data,name='globe_data'),
     path('Indiadistrict/<str:m>',views.Indiadistrict,name='Indiadistrict'),

@@ -11,16 +11,14 @@ def index(request):
 
 def map(request,m):
 	covidCases = worldData.data()
-	data = covidCases['cases']
-	newCases = data[4]['newCases']
-	newDeaths = data[4]['newDeaths']
-	worldList = ['country','totalCases','deaths','recovered']
-	cases = []
-	for j in data:
+	newCases = covidCases[215]['new_cases']
+	newDeaths = covidCases[215]['new_deaths']
+	worldList = ['country_name','cases','deaths','total_recovered']
+	worldCases = []
+	for j in covidCases[0:215]:
 		k = [j[i] for i in worldList if i in j]
-		cases.append(k)
+		worldCases.append(k)
 		# print(len(cases))
-	worldCases = cases[4]
 	
 	if m == 'india':
 		indiaList = ['state','confirmed','active','recovered','deaths']
@@ -37,8 +35,8 @@ def map(request,m):
 		totalDead = totalCases[4]
 		stateCases = cases1[1:]
 	    # print(indiaCases)
-		params = {"cases":cases[4:217],"total":worldCases[1],"dead":worldCases[2],
-	    "recover":worldCases[3],"stateCases":stateCases,"totalCases":totalCases,
+		params = {"cases":worldCases,"total":covidCases[215]['total_cases'],"dead":covidCases[215]['total_deaths'],
+	    "recover":covidCases[215]['total_recovered'],"stateCases":stateCases,"totalCases":totalCases,
 	    "totalConfirmed":totalConfirmed,"totalActive":totalActive,"totalRecovered":totalRecovered,
 	    "totalDead":totalDead,"newCases":newCases,"newDeaths":newDeaths}
 		return render(request,'india.html',params)
@@ -46,7 +44,8 @@ def map(request,m):
 	elif m == 'world':
 		indCases =indiaData.data()
 		
-		params = {"cases":cases[4:217],"total":worldCases[1],"dead":worldCases[2],"recover":worldCases[3],"newCases":newCases,"newDeaths":newDeaths}
+		params = {"cases":worldCases,"total":covidCases[215]['total_cases'],"dead":covidCases[215]['total_deaths'],
+	    "recover":covidCases[215]['total_recovered'],"newCases":newCases,"newDeaths":newDeaths}
 
 		return render(request,'worldmap.html',params)
 	else:
@@ -58,34 +57,28 @@ def worlddata(request):
 	response = JsonResponse(covidCases)
 	return HttpResponse(response)
 
-def graphOne(request):
-	url = "https://corona-virus-world-and-india-data.p.rapidapi.com/api"
-	headers = {
-	    'x-rapidapi-host': "corona-virus-world-and-india-data.p.rapidapi.com",
-	    'x-rapidapi-key': "8a535ee783mshca57265aad44eb9p18617fjsnce3f1f61eb7c"
-	    }
-	response = requests.request("GET", url, headers=headers)
-	x = response.json()
-	data = x["countries_stat"]
-	worldList = ['country_name','cases','deaths','total_recovered','total_tests']
-	countries = []; cases = []; deaths = []; total_recovered = []; total_tests = []
-	for i in data:
-		countries.append(i['country_name'])
-		cases.append(i['cases'].replace(",",""))
-		deaths.append(i['deaths'])
-		total_recovered.append(i['total_recovered'])
-		total_tests.append(i['total_tests'])
-	params = {"countries":countries,"cases":cases}
-	result = json.dumps(params)
-	td = [int(b) for b in cases]
-	result = {"countries": countries[:10],"cases":td[:10]}
-	return HttpResponse(json.dumps(result))
+# def graphOne(request):
+# 	DataWorld = worldData.data()
+# 	data = DataWorld[0:215]
+# 	worldList = ['country_name','cases','deaths','total_recovered','total_tests']
+# 	countries = []; cases = []; deaths = []; total_recovered = []; total_tests = []
+# 	for i in data:
+# 		countries.append(i['country_name'])
+# 		cases.append(i['cases'].replace(",",""))
+# 		deaths.append(i['deaths'])
+# 		total_recovered.append(i['total_recovered'])
+# 		total_tests.append(i['total_tests'])
+# 	params = {"countries":countries,"cases":cases}
+# 	result = json.dumps(params)
+# 	td = [int(b) for b in cases]
+# 	result = {"countries": countries[:10],"cases":td[:10]}
+# 	return HttpResponse(json.dumps(result))
 
 def allgraphs(request):
 	url = "https://corona-virus-world-and-india-data.p.rapidapi.com/api_india"
 	headers = {
 	    'x-rapidapi-host': "corona-virus-world-and-india-data.p.rapidapi.com",
-	    'x-rapidapi-key': "8a535ee783mshca57265aad44eb9p18617fjsnce3f1f61eb7c"
+	    'x-rapidapi-key': "Your API Key"
 	    }
 
 	response = requests.request("GET", url, headers=headers)
@@ -114,28 +107,34 @@ def allgraphs(request):
 	return HttpResponse(result)
 
 def Sort(allData): 
-    allData.sort(key = lambda i: i["country"]) 
+    allData.sort(key = lambda i: i["country_name"]) 
     return allData 
 
 def globe_data(request):
 	covidCases = worldData.data()
-	response = JsonResponse(covidCases)
-	worlddata = covidCases['cases'][4]
-	worldCases = worlddata['totalCases']
-	worldActive = worlddata['activeCases']
-	worldRecovered = worlddata['recovered']
-	worldDeaths = worlddata['deaths']
-	cases = covidCases['cases'][5:217]
+	#response = JsonResponse(covidCases)
+	worlddata = covidCases[215]
+	worldCases = covidCases[215]['total_cases']
+	worldActive = covidCases[215]['active_cases'][1:]
+	worldRecovered = covidCases[215]['total_recovered']
+	worldDeaths = covidCases[215]['total_deaths']
+	cases = covidCases[0:215]
+
 	countrywiseSort = Sort(cases)
 	confirmed = []; active = []; recovered = []; dead = []; country = []
 	for k in countrywiseSort:
-		countryName = k['country']
-		confirmedCases = k['totalCases'].replace(",","")
-		activeCases = k['activeCases'].replace(",","")
-		recoveredCases = k['recovered'].replace(",","")
+		countryName = k['country_name']
+		confirmedCases = k['cases'].replace(",","")
+		activeCases = k['serious_critical'].replace(",","")
+		recoveredCases = k['total_recovered'].replace(",","")
 		deathCases = k['deaths'].replace(",","")
 		if recoveredCases == "" or recoveredCases == "N/A":
 			recoveredCases = "0"
+		else:
+			pass
+
+		if activeCases == "" or activeCases == "N/A":
+			activeCases = "0"
 		else:
 			pass
 
@@ -171,7 +170,7 @@ def globe_data(request):
 		mergeRecovered.update(x3)
 	for x4 in deadList:
 		mergeDead.update(x4)
-	params = {"confirmed":mergedConfirmed,"active":mergeActive,"recovered":mergeRecovered,"deaths":mergeDead,"worldCases":worldCases,"worldActive":worldActive,"worldRecovered":worldRecovered,"worldDeaths":worldDeaths}
+	params = {"confirmed":mergedConfirmed,"active":mergeActive,"recovered":mergeRecovered,"deaths":mergeDead,"countries":country,"cases":con,"worldCases":worldCases,"worldActive":worldActive,"worldRecovered":worldRecovered,"worldDeaths":worldDeaths}
 	result = json.dumps(params)
 	return HttpResponse(result)
 

@@ -166,7 +166,7 @@ am4core.ready(function() {
     
     polygonSeries.events.on("inited", function () {
       polygonSeries.mapPolygons.each(function (mapPolygon) {
-        var count = data[mapPolygon.id];
+        var count = data1[mapPolygon.id];
         var count2 = data2[mapPolygon.id]
         var count3 = data3[mapPolygon.id]
         var count4 = data4[mapPolygon.id]
@@ -202,19 +202,15 @@ am4core.ready(function() {
     }
     })
     
-    var data = rsp['confirmed']
+    var data1 = rsp['confirmed']
     var data2 = rsp['active']
     var data3 = rsp['deaths']
     var data4 = rsp['recovered']
     }); // end am4core.ready()
-  });
 
+    countries = rsp["countries"]
+    console.log(rsp);
 
-function WorldCases() {
-fetch("/graphOne/")
-  .then(response => response.json())
-  .then(rsp => {
-      countries = rsp["countries"]
       cases = rsp["cases"]
 new Chart(document.getElementById("bar-chart"), {
 type: 'bar',
@@ -244,6 +240,4 @@ title: {
 }
 }
 });
-});
-}
-WorldCases()
+  });
